@@ -11,6 +11,7 @@ issue_contributions: u32 = 0,
 commit_contributions: u32 = 0,
 pr_contributions: u32 = 0,
 review_contributions: u32 = 0,
+followers: u32 = 0,
 
 const Statistics = @This();
 
@@ -158,6 +159,7 @@ fn getBasicInfo(client: *HttpClient, arena: *std.heap.ArenaAllocator) !struct {
     user: []const u8,
     name: ?[]const u8,
     emails: [][]const u8,
+    followers: u32,
 } {
     std.log.info("Getting contribution years...", .{});
     const response = try client.graphql(
@@ -165,6 +167,9 @@ fn getBasicInfo(client: *HttpClient, arena: *std.heap.ArenaAllocator) !struct {
         \\  viewer {
         \\    login
         \\    name
+        \\    followers {
+        \\      totalCount
+        \\    }
         \\    contributionsCollection {
         \\      contributionYears
         \\    }
@@ -183,6 +188,7 @@ fn getBasicInfo(client: *HttpClient, arena: *std.heap.ArenaAllocator) !struct {
         struct { data: struct { viewer: struct {
             login: []const u8,
             name: ?[]const u8,
+            followers: struct { totalCount: u32 },
             contributionsCollection: struct {
                 contributionYears: []u32,
             },
@@ -228,6 +234,7 @@ fn getBasicInfo(client: *HttpClient, arena: *std.heap.ArenaAllocator) !struct {
         .user = parsed.login,
         .name = parsed.name,
         .emails = emails,
+        .followers = parsed.followers.totalCount,
     };
 }
 
@@ -504,6 +511,7 @@ fn getRepos(
     errdefer allocator.free(result.user);
     result.name = try allocator.dupe(u8, info.name orelse info.user);
     errdefer allocator.free(result.name);
+    result.followers = info.followers;
 
     result.emails = try allocator.alloc([]const u8, info.emails.len);
     errdefer allocator.free(result.emails);

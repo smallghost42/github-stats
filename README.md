@@ -6,10 +6,10 @@ https://github.community/t/support-theme-context-for-images-in-light-vs-dark-mod
 
 <div align="center">
 <a href="https://github.com/jstrieb/github-stats">
-<img src="https://github.com/jstrieb/github-stats/blob/generated/overview.svg#gh-dark-mode-only" />
-<img src="https://github.com/jstrieb/github-stats/blob/generated/languages.svg#gh-dark-mode-only" />
-<img src="https://github.com/jstrieb/github-stats/blob/generated/overview.svg#gh-light-mode-only" />
-<img src="https://github.com/jstrieb/github-stats/blob/generated/languages.svg#gh-light-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/overview.svg#gh-dark-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/languages.svg#gh-dark-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/overview.svg#gh-light-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/languages.svg#gh-light-mode-only" />
 </a>
 </div>
 
@@ -19,6 +19,25 @@ repositories you have contributed to, but do not own.
 
 Generated images automatically switch between GitHub light theme and GitHub
 dark theme.
+
+This is a **modified fork** of the
+[`jstrieb/github-stats`](https://github.com/jstrieb/github-stats) template. All
+credit for the original project goes to Jacob Strieb. The changes in this fork
+are described [below](#additions-in-this-fork).
+
+## Additions in this fork
+
+- **Colored icons.** Each statistic icon in the overview card is now tinted to
+  match what it represents, using GitHub's accent palette (stars gold, forks
+  purple, contributions green, lines of code blue, views orange, repositories
+  pink).
+- **Wider cards.** Both cards were widened from 360px to 440px for better
+  balance, with a slightly larger font and an ellipsized title.
+- **Static layout.** The overview card no longer relies on a slide-in CSS
+  animation, so all rows render correctly even in viewers that do not run
+  animations.
+- **Followers.** The follower count is now fetched from the GitHub API for the
+  raw JSON output.
 
 
 ## Background
