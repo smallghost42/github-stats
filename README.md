@@ -9,9 +9,11 @@ https://github.community/t/support-theme-context-for-images-in-light-vs-dark-mod
 <img src="https://github.com/smallghost42/github-stats/blob/generated/overview.svg#gh-dark-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/languages.svg#gh-dark-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/contributions.svg#gh-dark-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/language-radar.svg#gh-dark-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/overview.svg#gh-light-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/languages.svg#gh-light-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/contributions.svg#gh-light-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/language-radar.svg#gh-light-mode-only" />
 </a>
 </div>
 
@@ -33,7 +35,7 @@ are described [below](#additions-in-this-fork).
   match what it represents, using GitHub's accent palette (stars gold, forks
   purple, contributions green, lines of code blue, views orange, repositories
   pink).
-- **Wider cards.** Both cards were widened from 360px to 440px for better
+- **Wider cards.** The cards were widened from 360px to 440px for better
   balance, with a slightly larger font and an ellipsized title.
 - **Static layout.** The overview card no longer relies on a slide-in CSS
   animation, so all rows render correctly even in viewers that do not run
@@ -45,6 +47,14 @@ are described [below](#additions-in-this-fork).
   radar/spider chart, splitting the combined "All-time contributions" number
   into commits, pull requests, issues, code reviews, and repositories created —
   each with its own accent color.
+- **Language radar card.** A fourth card (`language-radar.svg`) renders the top 6
+  languages (by total file size, with `--exclude-langs` masked languages
+  omitted) as a spider chart with a right-side legend. The polygon is re-based
+  to the biggest of the shown languages so it fills the web like a "game
+  skills" chart, while the percent labels and legend print each language's
+  **true** share of all language bytes (never a fake 100%) — e.g. a language
+  that is 15% of your code is drawn with a full-scale tip but labeled 15%. The
+  polygon is blue with per-language colored vertex dots.
 
 
 ## Background
@@ -190,6 +200,7 @@ and retrieve the images.
    - The [`overview.svg`](tree/generated/overview.svg) file.
    - The [`languages.svg`](tree/generated/languages.svg) file.
    - The [`contributions.svg`](tree/generated/contributions.svg) file.
+   - The [`language-radar.svg`](tree/generated/language-radar.svg) file.
 1. To add the statistics to your GitHub profile README, copy and paste the
    following lines of code into your markdown content.
    - Replace `[USERNAME]` in the links below with your own username.
@@ -200,6 +211,8 @@ and retrieve the images.
    ![](https://github.com/[USERNAME]/github-stats/blob/generated/languages.svg#gh-light-mode-only)
    ![](https://github.com/[USERNAME]/github-stats/blob/generated/contributions.svg#gh-dark-mode-only)
    ![](https://github.com/[USERNAME]/github-stats/blob/generated/contributions.svg#gh-light-mode-only)
+   ![](https://github.com/[USERNAME]/github-stats/blob/generated/language-radar.svg#gh-dark-mode-only)
+   ![](https://github.com/[USERNAME]/github-stats/blob/generated/language-radar.svg#gh-light-mode-only)
    [Created by `jstrieb/github-stats`.](https://github.com/jstrieb/github-stats)
    ```
 1. Star this repo if you like it!

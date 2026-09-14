@@ -36,6 +36,8 @@ const embedded_overview_template = @embedFile("templates/overview.svg");
 const embedded_languages_template = @embedFile("templates/languages.svg");
 const embedded_contributions_template =
     @embedFile("templates/contributions.svg");
+const embedded_language_radar_template =
+    @embedFile("templates/language_radar.svg");
 
 const Args = struct {
     access_token: ?[]const u8 = null,
@@ -50,14 +52,17 @@ const Args = struct {
     overview_output_file: ?[]const u8 = null,
     languages_output_file: ?[]const u8 = null,
     contributions_output_file: ?[]const u8 = null,
+    language_radar_output_file: ?[]const u8 = null,
     overview_template: ?[]const u8 = null,
     languages_template: ?[]const u8 = null,
     contributions_template: ?[]const u8 = null,
+    language_radar_template: ?[]const u8 = null,
     max_retries: ?usize = 25,
     version: bool = false,
     dump_overview_template: ?[]const u8 = null,
     dump_languages_template: ?[]const u8 = null,
     dump_contributions_template: ?[]const u8 = null,
+    dump_language_radar_template: ?[]const u8 = null,
 
     const Self = @This();
 
@@ -367,6 +372,182 @@ fn contributions(
     );
 }
 
+fn languageRadar(
+    arena: *std.heap.ArenaAllocator,
+    stats: anytype,
+    template: []const u8,
+) ![]const u8 {
+    const a = arena.allocator();
+    const cx: f64 = 168;
+    const cy: f64 = 125;
+    const R: f64 = 62;
+    const RAD: f64 = std.math.pi / 180.0;
+    const max_axes: usize = 6;
+
+    const n: usize = @min(stats.languages.count(), max_axes);
+    var body = std.ArrayList(u8).initCapacity(a, 4096) catch unreachable;
+    errdefer body.deinit(a);
+
+    if (n == 0) {
+        try body.appendSlice(
+            a,
+            "<text x=\"168\" y=\"128\" text-anchor=\"middle\" class=\"dim\">No language data</text>\n",
+        );
+        return templateFill(
+            a,
+            template,
+            struct { radar_body: []const u8 }{
+                .radar_body = try body.toOwnedSlice(a),
+            },
+        );
+    }
+
+    const keys = stats.languages.keys();
+    const vals = stats.languages.values();
+    const total_frac: f64 = if (stats.languages_total == 0)
+        0.0
+    else
+        @as(f64, @floatFromInt(stats.languages_total));
+    // Polygon is re-based to the biggest of the shown languages (fills the
+    // web), while percent labels/legend keep each language's true share of
+    // all languages.
+    const max_frac: f64 = @floatFromInt(vals[0]);
+
+    // rings
+    const ring_fracs = [_]f64{ 0.25, 0.5, 0.75, 1.0 };
+    for (ring_fracs) |f| {
+        var pts = std.ArrayList(u8).initCapacity(a, 128) catch unreachable;
+        errdefer pts.deinit(a);
+        for (0..n) |i| {
+            const ang: f64 = (-90 + @as(f64, @floatFromInt(i)) * 360.0 /
+                @as(f64, @floatFromInt(n))) * RAD;
+            const x = cx + f * R * std.math.cos(ang);
+            const y = cy + f * R * std.math.sin(ang);
+            if (i > 0) try pts.append(a, ' ');
+            try pts.appendSlice(a, try ptToString(a, x, y));
+        }
+        try body.appendSlice(a, "<polygon class=\"grid\" points=\"");
+        try body.appendSlice(a, pts.items);
+        try body.appendSlice(a, "\"/>\n");
+    }
+
+    // pass 1: compute per-axis data and collect polygon points
+    var lang_items: [6]struct { ox: f64, oy: f64, x: f64, y: f64, lx: f64, ly: f64, color: []const u8, percent: f64 } = undefined;
+    var poly_pts = std.ArrayList(u8).initCapacity(a, 128) catch unreachable;
+    errdefer poly_pts.deinit(a);
+    for (0..n) |i| {
+        const lang = keys[i];
+        const size: u64 = vals[i];
+        const ang: f64 = (-90 + @as(f64, @floatFromInt(i)) * 360.0 /
+            @as(f64, @floatFromInt(n))) * RAD;
+        const ct = std.math.cos(ang);
+        const st = std.math.sin(ang);
+        const frac: f64 = if (max_frac == 0) 0 else @as(f64, @floatFromInt(size)) / max_frac;
+        const r = frac * R;
+        lang_items[i] = .{
+            .ox = cx + R * ct,
+            .oy = cy + R * st,
+            .x = cx + r * ct,
+            .y = cy + r * st,
+            .lx = cx + (R + 14) * ct,
+            .ly = cy + (R + 14) * st,
+            .color = stats.language_colors.get(lang) orelse "#000",
+            .percent = 100.0 * @as(f64, @floatFromInt(size)) / total_frac,
+        };
+        if (i > 0) try poly_pts.append(a, ' ');
+        try poly_pts.appendSlice(a, try ptToString(a, lang_items[i].x, lang_items[i].y));
+    }
+
+    // polygon (drawn before axes/dots so they render on top)
+    try body.appendSlice(
+        a,
+        "<polygon fill=\"#58a6ff\" fill-opacity=\"0.18\" " ++
+            "stroke=\"#58a6ff\" stroke-width=\"2\" " ++
+            "stroke-linejoin=\"round\" points=\"",
+    );
+    try body.appendSlice(a, poly_pts.items);
+    try body.appendSlice(a, "\"/>\n");
+
+    // pass 2: axes, vertex dots, percent labels (on top of polygon)
+    for (0..n) |i| {
+        const it = &lang_items[i];
+
+        // axis line
+        try body.appendSlice(a, "<line class=\"axis\" x1=\"");
+        try body.appendSlice(a, try numToString(a, cx));
+        try body.appendSlice(a, "\" y1=\"");
+        try body.appendSlice(a, try numToString(a, cy));
+        try body.appendSlice(a, "\" x2=\"");
+        try body.appendSlice(a, try numToString(a, it.ox));
+        try body.appendSlice(a, "\" y2=\"");
+        try body.appendSlice(a, try numToString(a, it.oy));
+        try body.appendSlice(a, "\"/>\n");
+
+        // vertex dot
+        try body.appendSlice(a, "<circle cx=\"");
+        try body.appendSlice(a, try numToString(a, it.x));
+        try body.appendSlice(a, "\" cy=\"");
+        try body.appendSlice(a, try numToString(a, it.y));
+        try body.appendSlice(a, "\" r=\"3\" fill=\"");
+        try body.appendSlice(a, it.color);
+        try body.appendSlice(a, "\"/>\n");
+
+        // percent label near vertex
+        try body.appendSlice(a, "<text x=\"");
+        try body.appendSlice(a, try numToString(a, it.lx));
+        try body.appendSlice(a, "\" y=\"");
+        try body.appendSlice(a, try numToString(a, it.ly));
+        try body.appendSlice(a, "\" text-anchor=\"middle\" class=\"axis-label\" fill=\"");
+        try body.appendSlice(a, it.color);
+        try body.appendSlice(a, "\"><tspan font-weight=\"600\">");
+        try body.appendSlice(a, try std.fmt.allocPrint(a, "{d:.1}%", .{it.percent}));
+        try body.appendSlice(a, "</tspan></text>\n");
+    }
+
+    // legend (right side)
+    const ly0: f64 = 45.0;
+    for (0..n) |i| {
+        const lang = keys[i];
+        const size: u64 = vals[i];
+        const color = stats.language_colors.get(lang) orelse "#000";
+        const percent = 100.0 * @as(f64, @floatFromInt(size)) / total_frac;
+        const y = ly0 + @as(f64, @floatFromInt(i)) * 27.0;
+
+        // dot
+        try body.appendSlice(a, "<circle cx=\"282\" cy=\"");
+        try body.appendSlice(a, try numToString(a, y - 4));
+        try body.appendSlice(a, "\" r=\"3\" fill=\"");
+        try body.appendSlice(a, color);
+        try body.appendSlice(a, "\"/>\n");
+
+        // name (ellipsized at 12 chars)
+        const display_name = if (lang.len > 12)
+            try std.fmt.allocPrint(a, "{s}…", .{lang[0..11]})
+        else
+            lang;
+        try body.appendSlice(a, "<text x=\"292\" y=\"");
+        try body.appendSlice(a, try numToString(a, y));
+        try body.appendSlice(a, "\" class=\"legend-name\">");
+        try body.appendSlice(a, display_name);
+        try body.appendSlice(a, "</text>\n");
+
+        // percent
+        try body.appendSlice(a, "<text x=\"419\" y=\"");
+        try body.appendSlice(a, try numToString(a, y));
+        try body.appendSlice(a, "\" text-anchor=\"end\" class=\"legend-percent\">");
+        try body.appendSlice(a, try std.fmt.allocPrint(a, "{d:.1}%", .{percent}));
+        try body.appendSlice(a, "</text>\n");
+    }
+
+    return templateFill(
+        a,
+        template,
+        struct { radar_body: []const u8 }{
+            .radar_body = try body.toOwnedSlice(a),
+        },
+    );
+}
+
 pub fn main(init: std.process.Init) !void {
     const allocator = init.gpa;
     const io = init.io;
@@ -405,6 +586,11 @@ pub fn main(init: std.process.Init) !void {
 
     if (args.dump_contributions_template) |path| {
         try writeFile(io, path, embedded_contributions_template);
+        return;
+    }
+
+    if (args.dump_language_radar_template) |path| {
+        try writeFile(io, path, embedded_language_radar_template);
         return;
     }
 
@@ -561,6 +747,19 @@ pub fn main(init: std.process.Init) !void {
                     try readFile(arena.allocator(), io, template)
                 else
                     embedded_contributions_template,
+            ),
+        );
+
+        try writeFile(
+            io,
+            args.language_radar_output_file orelse "language-radar.svg",
+            try languageRadar(
+                &arena,
+                aggregate_stats,
+                if (args.language_radar_template) |template|
+                    try readFile(arena.allocator(), io, template)
+                else
+                    embedded_language_radar_template,
             ),
         );
     }
