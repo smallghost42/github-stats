@@ -8,8 +8,10 @@ https://github.community/t/support-theme-context-for-images-in-light-vs-dark-mod
 <a href="https://github.com/jstrieb/github-stats">
 <img src="https://github.com/smallghost42/github-stats/blob/generated/overview.svg#gh-dark-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/languages.svg#gh-dark-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/contributions.svg#gh-dark-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/overview.svg#gh-light-mode-only" />
 <img src="https://github.com/smallghost42/github-stats/blob/generated/languages.svg#gh-light-mode-only" />
+<img src="https://github.com/smallghost42/github-stats/blob/generated/contributions.svg#gh-light-mode-only" />
 </a>
 </div>
 
@@ -38,6 +40,11 @@ are described [below](#additions-in-this-fork).
   animations.
 - **Followers.** The follower count is now fetched from the GitHub API for the
   raw JSON output.
+- **Contribution breakdown card.** A third card
+  (`contributions.svg`) visualizes lifelong contributions as a pentagonal
+  radar/spider chart, splitting the combined "All-time contributions" number
+  into commits, pull requests, issues, code reviews, and repositories created —
+  each with its own accent color.
 
 
 ## Background
@@ -182,6 +189,7 @@ and retrieve the images.
    branch](tree/generated/).
    - The [`overview.svg`](tree/generated/overview.svg) file.
    - The [`languages.svg`](tree/generated/languages.svg) file.
+   - The [`contributions.svg`](tree/generated/contributions.svg) file.
 1. To add the statistics to your GitHub profile README, copy and paste the
    following lines of code into your markdown content.
    - Replace `[USERNAME]` in the links below with your own username.
@@ -190,6 +198,8 @@ and retrieve the images.
    ![](https://github.com/[USERNAME]/github-stats/blob/generated/overview.svg#gh-light-mode-only)
    ![](https://github.com/[USERNAME]/github-stats/blob/generated/languages.svg#gh-dark-mode-only)
    ![](https://github.com/[USERNAME]/github-stats/blob/generated/languages.svg#gh-light-mode-only)
+   ![](https://github.com/[USERNAME]/github-stats/blob/generated/contributions.svg#gh-dark-mode-only)
+   ![](https://github.com/[USERNAME]/github-stats/blob/generated/contributions.svg#gh-light-mode-only)
    [Created by `jstrieb/github-stats`.](https://github.com/jstrieb/github-stats)
    ```
 1. Star this repo if you like it!

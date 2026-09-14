@@ -34,6 +34,8 @@ fn logFn(
 
 const embedded_overview_template = @embedFile("templates/overview.svg");
 const embedded_languages_template = @embedFile("templates/languages.svg");
+const embedded_contributions_template =
+    @embedFile("templates/contributions.svg");
 
 const Args = struct {
     access_token: ?[]const u8 = null,
@@ -47,12 +49,15 @@ const Args = struct {
     exclude_private: bool = false,
     overview_output_file: ?[]const u8 = null,
     languages_output_file: ?[]const u8 = null,
+    contributions_output_file: ?[]const u8 = null,
     overview_template: ?[]const u8 = null,
     languages_template: ?[]const u8 = null,
+    contributions_template: ?[]const u8 = null,
     max_retries: ?usize = 25,
     version: bool = false,
     dump_overview_template: ?[]const u8 = null,
     dump_languages_template: ?[]const u8 = null,
+    dump_contributions_template: ?[]const u8 = null,
 
     const Self = @This();
 
@@ -165,6 +170,203 @@ fn languages(
     );
 }
 
+fn ptToString(a: std.mem.Allocator, x: f64, y: f64) ![]const u8 {
+    return std.fmt.allocPrint(a, "{d:.1},{d:.1}", .{ x, y });
+}
+
+fn numToString(a: std.mem.Allocator, n: f64) ![]const u8 {
+    return std.fmt.allocPrint(a, "{d:.1}", .{n});
+}
+
+fn fmtCount(a: std.mem.Allocator, n: usize) ![]const u8 {
+    const s = try std.fmt.allocPrint(a, "{d}", .{n});
+    if (s.len <= 3) return s;
+    var buf = try std.ArrayList(u8).initCapacity(a, s.len + (s.len - 1) / 3);
+    defer buf.deinit(a);
+    var i: usize = 0;
+    for (s) |c| {
+        if (i > 0 and (s.len - i) % 3 == 0) try buf.append(a, ',');
+        try buf.append(a, c);
+        i += 1;
+    }
+    return try buf.toOwnedSlice(a);
+}
+
+fn contributions(
+    arena: *std.heap.ArenaAllocator,
+    stats: anytype,
+    template: []const u8,
+) ![]const u8 {
+    const a = arena.allocator();
+    const cx: f64 = 222;
+    const cy: f64 = 125;
+    const R: f64 = 62;
+    const RAD: f64 = std.math.pi / 180.0;
+
+    const items = [_]struct {
+        label: []const u8,
+        count: usize,
+        color: []const u8,
+        angle: f64,
+        lx: f64,
+        ly: f64,
+        anchor: []const u8,
+    }{
+        .{
+            .label = "Commits",
+            .count = stats.commit_contributions,
+            .color = "#3fb950",
+            .angle = -90,
+            .lx = 222,
+            .ly = 52,
+            .anchor = "middle",
+        },
+        .{
+            .label = "Pull requests",
+            .count = stats.pr_contributions,
+            .color = "#a371f7",
+            .angle = -18,
+            .lx = 284,
+            .ly = 100,
+            .anchor = "start",
+        },
+        .{
+            .label = "Issues",
+            .count = stats.issue_contributions,
+            .color = "#f85149",
+            .angle = 54,
+            .lx = 262,
+            .ly = 180,
+            .anchor = "start",
+        },
+        .{
+            .label = "Code reviews",
+            .count = stats.review_contributions,
+            .color = "#ffa657",
+            .angle = 126,
+            .lx = 181,
+            .ly = 180,
+            .anchor = "end",
+        },
+        .{
+            .label = "Repos created",
+            .count = stats.repo_contributions,
+            .color = "#58a6ff",
+            .angle = 198,
+            .lx = 158,
+            .ly = 102,
+            .anchor = "end",
+        },
+    };
+
+    var total: usize = 0;
+    var max_count: usize = 0;
+    for (items) |it| {
+        total += it.count;
+        max_count = @max(max_count, it.count);
+    }
+
+    var outer: [items.len][2]f64 = undefined;
+    var values: [items.len][2]f64 = undefined;
+    for (items, 0..) |it, i| {
+        const ct = std.math.cos(it.angle * RAD);
+        const st = std.math.sin(it.angle * RAD);
+        outer[i] = .{ cx + R * ct, cy + R * st };
+        const frac: f64 =
+            if (max_count == 0)
+                0
+            else
+                @as(f64, @floatFromInt(it.count)) /
+                    @as(f64, @floatFromInt(max_count));
+        const r = frac * R;
+        values[i] = .{ cx + r * ct, cy + r * st };
+    }
+
+    var body = std.ArrayList(u8).initCapacity(a, 4096) catch unreachable;
+    errdefer body.deinit(a);
+
+    const ring_fracs = [_]f64{ 0.25, 0.5, 0.75, 1.0 };
+    for (ring_fracs) |f| {
+        var ring_pts = std.ArrayList(u8).initCapacity(a, 128) catch unreachable;
+        errdefer ring_pts.deinit(a);
+        for (items, 0..) |it, i| {
+            if (i > 0) try ring_pts.append(a, ' ');
+            const x = cx + f * R * std.math.cos(it.angle * RAD);
+            const y = cy + f * R * std.math.sin(it.angle * RAD);
+            try ring_pts.appendSlice(a, try ptToString(a, x, y));
+        }
+        try body.appendSlice(a, "<polygon class=\"grid\" points=\"");
+        try body.appendSlice(a, ring_pts.items);
+        try body.appendSlice(a, "\"/>\n");
+    }
+
+    for (outer) |pt| {
+        try body.appendSlice(a, "<line class=\"axis\" x1=\"");
+        try body.appendSlice(a, try numToString(a, cx));
+        try body.appendSlice(a, "\" y1=\"");
+        try body.appendSlice(a, try numToString(a, cy));
+        try body.appendSlice(a, "\" x2=\"");
+        try body.appendSlice(a, try numToString(a, pt[0]));
+        try body.appendSlice(a, "\" y2=\"");
+        try body.appendSlice(a, try numToString(a, pt[1]));
+        try body.appendSlice(a, "\"/>\n");
+    }
+
+    if (max_count > 0) {
+        var pts = std.ArrayList(u8).initCapacity(a, 128) catch unreachable;
+        errdefer pts.deinit(a);
+        for (values, 0..) |pt, i| {
+            if (i > 0) try pts.append(a, ' ');
+            try pts.appendSlice(a, try ptToString(a, pt[0], pt[1]));
+        }
+        try body.appendSlice(
+            a,
+            "<polygon fill=\"#3fb950\" fill-opacity=\"0.18\" " ++
+                "stroke=\"#3fb950\" stroke-width=\"2\" " ++
+                "stroke-linejoin=\"round\" points=\"",
+        );
+        try body.appendSlice(a, pts.items);
+        try body.appendSlice(a, "\"/>\n");
+    }
+
+    for (items, 0..) |it, i| {
+        const pt = values[i];
+        try body.appendSlice(a, "<circle cx=\"");
+        try body.appendSlice(a, try numToString(a, pt[0]));
+        try body.appendSlice(a, "\" cy=\"");
+        try body.appendSlice(a, try numToString(a, pt[1]));
+        try body.appendSlice(a, "\" r=\"3\" fill=\"");
+        try body.appendSlice(a, it.color);
+        try body.appendSlice(a, "\"/>\n");
+
+        try body.appendSlice(a, "<text x=\"");
+        try body.appendSlice(a, try numToString(a, it.lx));
+        try body.appendSlice(a, "\" y=\"");
+        try body.appendSlice(a, try numToString(a, it.ly));
+        try body.appendSlice(a, "\" text-anchor=\"");
+        try body.appendSlice(a, it.anchor);
+        try body.appendSlice(a, "\"><tspan class=\"name\" fill=\"");
+        try body.appendSlice(a, it.color);
+        try body.appendSlice(a, "\">");
+        try body.appendSlice(a, it.label);
+        try body.appendSlice(a, " </tspan><tspan class=\"count\">");
+        try body.appendSlice(a, try fmtCount(a, it.count));
+        try body.appendSlice(a, "</tspan></text>\n");
+    }
+
+    try body.appendSlice(a, "<text x=\"222\" y=\"199\" text-anchor=\"middle\" class=\"total\">Total: ");
+    try body.appendSlice(a, try fmtCount(a, total));
+    try body.appendSlice(a, "</text>\n");
+
+    return templateFill(
+        a,
+        template,
+        struct { radar_body: []const u8 }{
+            .radar_body = try body.toOwnedSlice(a),
+        },
+    );
+}
+
 pub fn main(init: std.process.Init) !void {
     const allocator = init.gpa;
     const io = init.io;
@@ -198,6 +400,11 @@ pub fn main(init: std.process.Init) !void {
 
     if (args.dump_languages_template) |path| {
         try writeFile(io, path, embedded_languages_template);
+        return;
+    }
+
+    if (args.dump_contributions_template) |path| {
+        try writeFile(io, path, embedded_contributions_template);
         return;
     }
 
@@ -256,12 +463,22 @@ pub fn main(init: std.process.Init) !void {
         lines_changed: usize = 0,
         views: usize = 0,
         repos: usize = 0,
+        commit_contributions: usize = 0,
+        pr_contributions: usize = 0,
+        issue_contributions: usize = 0,
+        review_contributions: usize = 0,
+        repo_contributions: usize = 0,
     } = .{
         .contributions = stats.repo_contributions +
             stats.issue_contributions +
             stats.commit_contributions +
             stats.pr_contributions +
             stats.review_contributions,
+        .commit_contributions = stats.commit_contributions,
+        .pr_contributions = stats.pr_contributions,
+        .issue_contributions = stats.issue_contributions,
+        .review_contributions = stats.review_contributions,
+        .repo_contributions = stats.repo_contributions,
         .languages = try .init(allocator, &.{}, &.{}),
         .language_colors = try .init(allocator, &.{}, &.{}),
         .name = stats.name,
@@ -331,6 +548,19 @@ pub fn main(init: std.process.Init) !void {
                     try readFile(arena.allocator(), io, template)
                 else
                     embedded_languages_template,
+            ),
+        );
+
+        try writeFile(
+            io,
+            args.contributions_output_file orelse "contributions.svg",
+            try contributions(
+                &arena,
+                aggregate_stats,
+                if (args.contributions_template) |template|
+                    try readFile(arena.allocator(), io, template)
+                else
+                    embedded_contributions_template,
             ),
         );
     }
