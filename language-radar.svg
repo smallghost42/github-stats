@@ -1,0 +1,128 @@
+<svg id="gh-dark-mode-only" width="440" height="210" xmlns="http://www.w3.org/2000/svg">
+<style>
+svg {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+}
+
+#background {
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  fill: white;
+  stroke: rgb(225, 228, 232);
+  stroke-width: 1px;
+  rx: 6px;
+  ry: 6px;
+}
+
+#gh-dark-mode-only:target #background {
+  fill: #0d1117;
+  stroke-width: 0.5px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  fill: rgb(36, 41, 46);
+}
+
+#gh-dark-mode-only:target .title {
+  fill: #c9d1d9;
+}
+
+.grid {
+  fill: none;
+  stroke: rgb(225, 228, 232);
+  stroke-width: 1px;
+}
+
+#gh-dark-mode-only:target .grid {
+  stroke: rgba(110, 118, 129, 0.4);
+}
+
+.axis {
+  stroke: rgb(225, 228, 232);
+  stroke-width: 1px;
+}
+
+#gh-dark-mode-only:target .axis {
+  stroke: rgba(110, 118, 129, 0.4);
+}
+
+.axis-label {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.legend-name {
+  font-size: 12px;
+  fill: rgb(36, 41, 46);
+}
+
+#gh-dark-mode-only:target .legend-name {
+  fill: #c9d1d9;
+}
+
+.legend-percent {
+  font-size: 12px;
+  font-weight: 600;
+  fill: rgb(88, 96, 105);
+}
+
+#gh-dark-mode-only:target .legend-percent {
+  fill: #8b949e;
+}
+
+.dim {
+  font-size: 13px;
+  fill: rgb(88, 96, 105);
+}
+
+#gh-dark-mode-only:target .dim {
+  fill: #8b949e;
+}
+</style>
+<rect x="5" y="5" id="background"/>
+<text x="21" y="28" class="title">Languages (by File Size)</text>
+<polygon class="grid" points="168.0,109.5 181.4,117.3 181.4,132.8 168.0,140.5 154.6,132.8 154.6,117.3"/>
+<polygon class="grid" points="168.0,94.0 194.8,109.5 194.8,140.5 168.0,156.0 141.2,140.5 141.2,109.5"/>
+<polygon class="grid" points="168.0,78.5 208.3,101.8 208.3,148.3 168.0,171.5 127.7,148.3 127.7,101.8"/>
+<polygon class="grid" points="168.0,63.0 221.7,94.0 221.7,156.0 168.0,187.0 114.3,156.0 114.3,94.0"/>
+<polygon fill="#58a6ff" fill-opacity="0.18" stroke="#58a6ff" stroke-width="2" stroke-linejoin="round" points="168.0,63.0 207.8,102.0 186.3,135.5 168.0,135.6 160.1,129.5 166.1,123.9"/>
+<line class="axis" x1="168.0" y1="125.0" x2="168.0" y2="63.0"/>
+<circle cx="168.0" cy="63.0" r="3" fill="#3178c6"/>
+<text x="168.0" y="49.0" text-anchor="middle" class="axis-label" fill="#3178c6"><tspan font-weight="600">39.8%</tspan></text>
+<line class="axis" x1="168.0" y1="125.0" x2="221.7" y2="94.0"/>
+<circle cx="207.8" cy="102.0" r="3" fill="#555555"/>
+<text x="233.8" y="87.0" text-anchor="middle" class="axis-label" fill="#555555"><tspan font-weight="600">29.5%</tspan></text>
+<line class="axis" x1="168.0" y1="125.0" x2="221.7" y2="156.0"/>
+<circle cx="186.3" cy="135.5" r="3" fill="#f34b7d"/>
+<text x="233.8" y="163.0" text-anchor="middle" class="axis-label" fill="#f34b7d"><tspan font-weight="600">13.5%</tspan></text>
+<line class="axis" x1="168.0" y1="125.0" x2="168.0" y2="187.0"/>
+<circle cx="168.0" cy="135.6" r="3" fill="#427819"/>
+<text x="168.0" y="201.0" text-anchor="middle" class="axis-label" fill="#427819"><tspan font-weight="600">6.8%</tspan></text>
+<line class="axis" x1="168.0" y1="125.0" x2="114.3" y2="156.0"/>
+<circle cx="160.1" cy="129.5" r="3" fill="#f1e05a"/>
+<text x="102.2" y="163.0" text-anchor="middle" class="axis-label" fill="#f1e05a"><tspan font-weight="600">5.8%</tspan></text>
+<line class="axis" x1="168.0" y1="125.0" x2="114.3" y2="94.0"/>
+<circle cx="166.1" cy="123.9" r="3" fill="#89e051"/>
+<text x="102.2" y="87.0" text-anchor="middle" class="axis-label" fill="#89e051"><tspan font-weight="600">1.4%</tspan></text>
+<circle cx="282" cy="41.0" r="3" fill="#3178c6"/>
+<text x="292" y="45.0" class="legend-name">TypeScript</text>
+<text x="419" y="45.0" text-anchor="end" class="legend-percent">39.8%</text>
+<circle cx="282" cy="68.0" r="3" fill="#555555"/>
+<text x="292" y="72.0" class="legend-name">C</text>
+<text x="419" y="72.0" text-anchor="end" class="legend-percent">29.5%</text>
+<circle cx="282" cy="95.0" r="3" fill="#f34b7d"/>
+<text x="292" y="99.0" class="legend-name">C++</text>
+<text x="419" y="99.0" text-anchor="end" class="legend-percent">13.5%</text>
+<circle cx="282" cy="122.0" r="3" fill="#427819"/>
+<text x="292" y="126.0" class="legend-name">Makefile</text>
+<text x="419" y="126.0" text-anchor="end" class="legend-percent">6.8%</text>
+<circle cx="282" cy="149.0" r="3" fill="#f1e05a"/>
+<text x="292" y="153.0" class="legend-name">JavaScript</text>
+<text x="419" y="153.0" text-anchor="end" class="legend-percent">5.8%</text>
+<circle cx="282" cy="176.0" r="3" fill="#89e051"/>
+<text x="292" y="180.0" class="legend-name">Shell</text>
+<text x="419" y="180.0" text-anchor="end" class="legend-percent">1.4%</text>
+
+</svg>
