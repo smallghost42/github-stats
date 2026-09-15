@@ -87,42 +87,42 @@ svg {
 <polygon class="grid" points="168.0,94.0 194.8,109.5 194.8,140.5 168.0,156.0 141.2,140.5 141.2,109.5"/>
 <polygon class="grid" points="168.0,78.5 208.3,101.8 208.3,148.3 168.0,171.5 127.7,148.3 127.7,101.8"/>
 <polygon class="grid" points="168.0,63.0 221.7,94.0 221.7,156.0 168.0,187.0 114.3,156.0 114.3,94.0"/>
-<polygon fill="#58a6ff" fill-opacity="0.18" stroke="#58a6ff" stroke-width="2" stroke-linejoin="round" points="168.0,63.0 207.8,102.0 186.3,135.5 168.0,135.6 160.1,129.5 166.1,123.9"/>
+<polygon fill="#58a6ff" fill-opacity="0.18" stroke="#58a6ff" stroke-width="2" stroke-linejoin="round" points="168.0,63.0 194.1,109.9 185.4,135.0 168.0,134.9 160.5,129.3 166.3,124.0"/>
 <line class="axis" x1="168.0" y1="125.0" x2="168.0" y2="63.0"/>
 <circle cx="168.0" cy="63.0" r="3" fill="#3178c6"/>
-<text x="168.0" y="49.0" text-anchor="middle" class="axis-label" fill="#3178c6"><tspan font-weight="600">39.8%</tspan></text>
+<text x="168.0" y="49.0" text-anchor="middle" class="axis-label" fill="#3178c6"><tspan font-weight="600">45.2%</tspan></text>
 <line class="axis" x1="168.0" y1="125.0" x2="221.7" y2="94.0"/>
-<circle cx="207.8" cy="102.0" r="3" fill="#555555"/>
-<text x="233.8" y="87.0" text-anchor="middle" class="axis-label" fill="#555555"><tspan font-weight="600">29.5%</tspan></text>
+<circle cx="194.1" cy="109.9" r="3" fill="#555555"/>
+<text x="233.8" y="87.0" text-anchor="middle" class="axis-label" fill="#555555"><tspan font-weight="600">22.0%</tspan></text>
 <line class="axis" x1="168.0" y1="125.0" x2="221.7" y2="156.0"/>
-<circle cx="186.3" cy="135.5" r="3" fill="#f34b7d"/>
-<text x="233.8" y="163.0" text-anchor="middle" class="axis-label" fill="#f34b7d"><tspan font-weight="600">13.5%</tspan></text>
+<circle cx="185.4" cy="135.0" r="3" fill="#f34b7d"/>
+<text x="233.8" y="163.0" text-anchor="middle" class="axis-label" fill="#f34b7d"><tspan font-weight="600">14.6%</tspan></text>
 <line class="axis" x1="168.0" y1="125.0" x2="168.0" y2="187.0"/>
-<circle cx="168.0" cy="135.6" r="3" fill="#427819"/>
-<text x="168.0" y="201.0" text-anchor="middle" class="axis-label" fill="#427819"><tspan font-weight="600">6.8%</tspan></text>
+<circle cx="168.0" cy="134.9" r="3" fill="#427819"/>
+<text x="168.0" y="201.0" text-anchor="middle" class="axis-label" fill="#427819"><tspan font-weight="600">7.2%</tspan></text>
 <line class="axis" x1="168.0" y1="125.0" x2="114.3" y2="156.0"/>
-<circle cx="160.1" cy="129.5" r="3" fill="#f1e05a"/>
-<text x="102.2" y="163.0" text-anchor="middle" class="axis-label" fill="#f1e05a"><tspan font-weight="600">5.8%</tspan></text>
+<circle cx="160.5" cy="129.3" r="3" fill="#f1e05a"/>
+<text x="102.2" y="163.0" text-anchor="middle" class="axis-label" fill="#f1e05a"><tspan font-weight="600">6.3%</tspan></text>
 <line class="axis" x1="168.0" y1="125.0" x2="114.3" y2="94.0"/>
-<circle cx="166.1" cy="123.9" r="3" fill="#89e051"/>
-<text x="102.2" y="87.0" text-anchor="middle" class="axis-label" fill="#89e051"><tspan font-weight="600">1.4%</tspan></text>
+<circle cx="166.3" cy="124.0" r="3" fill="#89e051"/>
+<text x="102.2" y="87.0" text-anchor="middle" class="axis-label" fill="#89e051"><tspan font-weight="600">1.5%</tspan></text>
 <circle cx="282" cy="41.0" r="3" fill="#3178c6"/>
 <text x="292" y="45.0" class="legend-name">TypeScript</text>
-<text x="419" y="45.0" text-anchor="end" class="legend-percent">39.8%</text>
+<text x="419" y="45.0" text-anchor="end" class="legend-percent">45.2%</text>
 <circle cx="282" cy="68.0" r="3" fill="#555555"/>
 <text x="292" y="72.0" class="legend-name">C</text>
-<text x="419" y="72.0" text-anchor="end" class="legend-percent">29.5%</text>
+<text x="419" y="72.0" text-anchor="end" class="legend-percent">22.0%</text>
 <circle cx="282" cy="95.0" r="3" fill="#f34b7d"/>
 <text x="292" y="99.0" class="legend-name">C++</text>
-<text x="419" y="99.0" text-anchor="end" class="legend-percent">13.5%</text>
+<text x="419" y="99.0" text-anchor="end" class="legend-percent">14.6%</text>
 <circle cx="282" cy="122.0" r="3" fill="#427819"/>
 <text x="292" y="126.0" class="legend-name">Makefile</text>
-<text x="419" y="126.0" text-anchor="end" class="legend-percent">6.8%</text>
+<text x="419" y="126.0" text-anchor="end" class="legend-percent">7.2%</text>
 <circle cx="282" cy="149.0" r="3" fill="#f1e05a"/>
 <text x="292" y="153.0" class="legend-name">JavaScript</text>
-<text x="419" y="153.0" text-anchor="end" class="legend-percent">5.8%</text>
+<text x="419" y="153.0" text-anchor="end" class="legend-percent">6.3%</text>
 <circle cx="282" cy="176.0" r="3" fill="#89e051"/>
 <text x="292" y="180.0" class="legend-name">Shell</text>
-<text x="419" y="180.0" text-anchor="end" class="legend-percent">1.4%</text>
+<text x="419" y="180.0" text-anchor="end" class="legend-percent">1.5%</text>
 
 </svg>
