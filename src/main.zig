@@ -204,9 +204,14 @@ fn contributions(
 ) ![]const u8 {
     const a = arena.allocator();
     const cx: f64 = 222;
-    const cy: f64 = 125;
+    const cy: f64 = 118;
     const R: f64 = 62;
     const RAD: f64 = std.math.pi / 180.0;
+    // The polygon is re-based to the biggest stat, so a tiny contribution (e.g.
+    // 5 code reviews against 847 commits) would collapse onto the center and
+    // read as "nothing". min_frac is the floor (as a fraction of the outer
+    // ring) that any non-zero stat is drawn at, so it stays just visible.
+    const min_frac: f64 = 0.08;
 
     const items = [_]struct {
         label: []const u8,
@@ -223,43 +228,34 @@ fn contributions(
             .color = "#3fb950",
             .angle = -90,
             .lx = 222,
-            .ly = 52,
+            .ly = 48,
             .anchor = "middle",
         },
         .{
             .label = "Pull requests",
             .count = stats.pr_contributions,
             .color = "#a371f7",
-            .angle = -18,
-            .lx = 284,
-            .ly = 100,
+            .angle = 0,
+            .lx = 292,
+            .ly = 122,
             .anchor = "start",
         },
         .{
             .label = "Issues",
             .count = stats.issue_contributions,
             .color = "#f85149",
-            .angle = 54,
-            .lx = 262,
-            .ly = 180,
-            .anchor = "start",
+            .angle = 90,
+            .lx = 222,
+            .ly = 198,
+            .anchor = "middle",
         },
         .{
             .label = "Code reviews",
             .count = stats.review_contributions,
             .color = "#ffa657",
-            .angle = 126,
-            .lx = 181,
-            .ly = 180,
-            .anchor = "end",
-        },
-        .{
-            .label = "Repos created",
-            .count = stats.repo_contributions,
-            .color = "#58a6ff",
-            .angle = 198,
-            .lx = 158,
-            .ly = 102,
+            .angle = 180,
+            .lx = 152,
+            .ly = 122,
             .anchor = "end",
         },
     };
@@ -283,7 +279,7 @@ fn contributions(
             else
                 @as(f64, @floatFromInt(it.count)) /
                     @as(f64, @floatFromInt(max_count));
-        const r = frac * R;
+        const r = (if (it.count > 0) @max(frac, min_frac) else 0) * R;
         values[i] = .{ cx + r * ct, cy + r * st };
     }
 
@@ -359,7 +355,7 @@ fn contributions(
         try body.appendSlice(a, "</tspan></text>\n");
     }
 
-    try body.appendSlice(a, "<text x=\"222\" y=\"199\" text-anchor=\"middle\" class=\"total\">Total: ");
+    try body.appendSlice(a, "<text x=\"222\" y=\"28\" text-anchor=\"middle\" class=\"total\">Total: ");
     try body.appendSlice(a, try fmtCount(a, total));
     try body.appendSlice(a, "</text>\n");
 
@@ -379,8 +375,8 @@ fn languageRadar(
 ) ![]const u8 {
     const a = arena.allocator();
     const cx: f64 = 168;
-    const cy: f64 = 125;
-    const R: f64 = 62;
+    const cy: f64 = 112;
+    const R: f64 = 64;
     const RAD: f64 = std.math.pi / 180.0;
     const max_axes: usize = 6;
 
@@ -391,7 +387,7 @@ fn languageRadar(
     if (n == 0) {
         try body.appendSlice(
             a,
-            "<text x=\"168\" y=\"128\" text-anchor=\"middle\" class=\"dim\">No language data</text>\n",
+            "<text x=\"168\" y=\"116\" text-anchor=\"middle\" class=\"dim\">No language data</text>\n",
         );
         return templateFill(
             a,
@@ -504,8 +500,8 @@ fn languageRadar(
         try body.appendSlice(a, "</tspan></text>\n");
     }
 
-    // legend (right side)
-    const ly0: f64 = 45.0;
+    // legend (right side), rows centered on the radar's vertical center
+    const ly0: f64 = cy - (@as(f64, @floatFromInt(n)) - 1) * 27.0 / 2.0;
     for (0..n) |i| {
         const lang = keys[i];
         const size: u64 = vals[i];
@@ -514,7 +510,7 @@ fn languageRadar(
         const y = ly0 + @as(f64, @floatFromInt(i)) * 27.0;
 
         // dot
-        try body.appendSlice(a, "<circle cx=\"282\" cy=\"");
+        try body.appendSlice(a, "<circle cx=\"290\" cy=\"");
         try body.appendSlice(a, try numToString(a, y - 4));
         try body.appendSlice(a, "\" r=\"3\" fill=\"");
         try body.appendSlice(a, color);
@@ -525,14 +521,14 @@ fn languageRadar(
             try std.fmt.allocPrint(a, "{s}…", .{lang[0..11]})
         else
             lang;
-        try body.appendSlice(a, "<text x=\"292\" y=\"");
+        try body.appendSlice(a, "<text x=\"300\" y=\"");
         try body.appendSlice(a, try numToString(a, y));
         try body.appendSlice(a, "\" class=\"legend-name\">");
         try body.appendSlice(a, display_name);
         try body.appendSlice(a, "</text>\n");
 
         // percent
-        try body.appendSlice(a, "<text x=\"419\" y=\"");
+        try body.appendSlice(a, "<text x=\"425\" y=\"");
         try body.appendSlice(a, try numToString(a, y));
         try body.appendSlice(a, "\" text-anchor=\"end\" class=\"legend-percent\">");
         try body.appendSlice(a, try std.fmt.allocPrint(a, "{d:.1}%", .{percent}));

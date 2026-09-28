@@ -40,16 +40,31 @@ are described [below](#additions-in-this-fork).
 - **Static layout.** The overview card no longer relies on a slide-in CSS
   animation, so all rows render correctly even in viewers that do not run
   animations.
+- **GitHub-matched dark border.** The two table-style cards now draw their
+  dark-mode border in GitHub's default `#3d444d` instead of the old transparent
+  hairline, so they blend into the theme the same way native cards do.
+- **Borderless radar cards.** The two chart cards (`contributions.svg` and
+  `language-radar.svg`) have no card frame at all — the background is fully
+  transparent, they have no title, and they float directly on the README page
+  background (GitHub white / `#0d1117`) with only the chart geometry and labels.
+  All of their text, ring, and axis colors still have light/dark variants via
+  the same `#gh-dark-mode-only` mechanism as the framed cards.
 - **Followers.** The follower count is now fetched from the GitHub API for the
   raw JSON output.
 - **Contribution breakdown card.** A third card
-  (`contributions.svg`) visualizes lifelong contributions as a pentagonal
-  radar/spider chart, splitting the combined "All-time contributions" number
-  into commits, pull requests, issues, code reviews, and repositories created —
-  each with its own accent color.
+  (`contributions.svg`) visualizes lifelong contributions as a diamond
+  radar/spider chart of commits, pull requests, issues, and code reviews —
+  each with its own accent color, and a `Total:` line above the chart. Like the
+  language radar, the value polygon is re-based to the biggest stat so the web
+  fills up rather than collapsing onto the center, and every non-zero stat is
+  drawn at a small minimum radius, so a handful of code reviews next to hundreds
+  of commits is still visible instead of looking like nothing. Repositories
+  created are no longer charted, so the card's total covers the four remaining
+  stats.
 - **Language radar card.** A fourth card (`language-radar.svg`) renders the top 6
   languages (by total file size, with `--exclude-langs` masked languages
-  omitted) as a spider chart with a right-side legend. The polygon is re-based
+  omitted) as a spider chart with a right-side legend whose rows are centered
+  against the chart. The polygon is re-based
   to the biggest of the shown languages so it fills the web like a "game
   skills" chart, while the percent labels and legend print each language's
   **true** share of all language bytes (never a fake 100%) — e.g. a language
