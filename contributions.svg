@@ -4,31 +4,6 @@ svg {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
 }
 
-#background {
-  width: calc(100% - 10px);
-  height: calc(100% - 10px);
-  fill: white;
-  stroke: rgb(225, 228, 232);
-  stroke-width: 1px;
-  rx: 6px;
-  ry: 6px;
-}
-
-#gh-dark-mode-only:target #background {
-  fill: #0d1117;
-  stroke-width: 0.5px;
-}
-
-.title {
-  font-size: 16px;
-  font-weight: 600;
-  fill: rgb(36, 41, 46);
-}
-
-#gh-dark-mode-only:target .title {
-  fill: #c9d1d9;
-}
-
 .grid {
   fill: none;
   stroke: rgb(225, 228, 232);
@@ -72,28 +47,23 @@ svg {
   fill: #c9d1d9;
 }
 </style>
-<rect x="5" y="5" id="background"/>
-<text x="21" y="28" class="title">Contribution Breakdown</text>
-<polygon class="grid" points="222.0,109.5 236.7,120.2 231.1,137.5 212.9,137.5 207.3,120.2"/>
-<polygon class="grid" points="222.0,94.0 251.5,115.4 240.2,150.1 203.8,150.1 192.5,115.4"/>
-<polygon class="grid" points="222.0,78.5 266.2,110.6 249.3,162.6 194.7,162.6 177.8,110.6"/>
-<polygon class="grid" points="222.0,63.0 281.0,105.8 258.4,175.2 185.6,175.2 163.0,105.8"/>
-<line class="axis" x1="222.0" y1="125.0" x2="222.0" y2="63.0"/>
-<line class="axis" x1="222.0" y1="125.0" x2="281.0" y2="105.8"/>
-<line class="axis" x1="222.0" y1="125.0" x2="258.4" y2="175.2"/>
-<line class="axis" x1="222.0" y1="125.0" x2="185.6" y2="175.2"/>
-<line class="axis" x1="222.0" y1="125.0" x2="163.0" y2="105.8"/>
-<polygon fill="#3fb950" fill-opacity="0.18" stroke="#3fb950" stroke-width="2" stroke-linejoin="round" points="222.0,63.0 223.8,124.4 223.3,126.8 221.8,125.3 218.4,123.8"/>
-<circle cx="222.0" cy="63.0" r="3" fill="#3fb950"/>
-<text x="222.0" y="52.0" text-anchor="middle"><tspan class="name" fill="#3fb950">Commits </tspan><tspan class="count">847</tspan></text>
-<circle cx="223.8" cy="124.4" r="3" fill="#a371f7"/>
-<text x="284.0" y="100.0" text-anchor="start"><tspan class="name" fill="#a371f7">Pull requests </tspan><tspan class="count">26</tspan></text>
-<circle cx="223.3" cy="126.8" r="3" fill="#f85149"/>
-<text x="262.0" y="180.0" text-anchor="start"><tspan class="name" fill="#f85149">Issues </tspan><tspan class="count">31</tspan></text>
-<circle cx="221.8" cy="125.3" r="3" fill="#ffa657"/>
-<text x="181.0" y="180.0" text-anchor="end"><tspan class="name" fill="#ffa657">Code reviews </tspan><tspan class="count">5</tspan></text>
-<circle cx="218.4" cy="123.8" r="3" fill="#58a6ff"/>
-<text x="158.0" y="102.0" text-anchor="end"><tspan class="name" fill="#58a6ff">Repos created </tspan><tspan class="count">51</tspan></text>
-<text x="222" y="199" text-anchor="middle" class="total">Total: 960</text>
+<polygon class="grid" points="222.0,102.5 237.5,118.0 222.0,133.5 206.5,118.0"/>
+<polygon class="grid" points="222.0,87.0 253.0,118.0 222.0,149.0 191.0,118.0"/>
+<polygon class="grid" points="222.0,71.5 268.5,118.0 222.0,164.5 175.5,118.0"/>
+<polygon class="grid" points="222.0,56.0 284.0,118.0 222.0,180.0 160.0,118.0"/>
+<line class="axis" x1="222.0" y1="118.0" x2="222.0" y2="56.0"/>
+<line class="axis" x1="222.0" y1="118.0" x2="284.0" y2="118.0"/>
+<line class="axis" x1="222.0" y1="118.0" x2="222.0" y2="180.0"/>
+<line class="axis" x1="222.0" y1="118.0" x2="160.0" y2="118.0"/>
+<polygon fill="#3fb950" fill-opacity="0.18" stroke="#3fb950" stroke-width="2" stroke-linejoin="round" points="222.0,56.0 227.0,118.0 222.0,123.0 217.0,118.0"/>
+<circle cx="222.0" cy="56.0" r="3" fill="#3fb950"/>
+<text x="222.0" y="48.0" text-anchor="middle"><tspan class="name" fill="#3fb950">Commits </tspan><tspan class="count">848</tspan></text>
+<circle cx="227.0" cy="118.0" r="3" fill="#a371f7"/>
+<text x="292.0" y="122.0" text-anchor="start"><tspan class="name" fill="#a371f7">Pull requests </tspan><tspan class="count">27</tspan></text>
+<circle cx="222.0" cy="123.0" r="3" fill="#f85149"/>
+<text x="222.0" y="198.0" text-anchor="middle"><tspan class="name" fill="#f85149">Issues </tspan><tspan class="count">31</tspan></text>
+<circle cx="217.0" cy="118.0" r="3" fill="#ffa657"/>
+<text x="152.0" y="122.0" text-anchor="end"><tspan class="name" fill="#ffa657">Code reviews </tspan><tspan class="count">5</tspan></text>
+<text x="222" y="28" text-anchor="middle" class="total">Total: 911</text>
 
 </svg>
